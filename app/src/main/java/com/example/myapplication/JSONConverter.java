@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -39,7 +40,7 @@ public class JSONConverter {
         try {
             load(context);
             hashMapOut = getLinkedHashMap();
-            saveToJson(context);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -54,6 +55,7 @@ public class JSONConverter {
     public LinkedHashMap<String, ArrayList<Event>> getLinkedHashMap() {
         //Берем текущий список, который ранее получили из файла
         ArrayList<Event> bufferEvents = data.getEvent();
+
         //проверяем, что он не пустой
         if (!bufferEvents.isEmpty()) {
             //сортируем, чтобы даты шли друг за другом
@@ -61,39 +63,41 @@ public class JSONConverter {
             //создаем LinkedHashMap, Linked потому как важен порядок дат
             LinkedHashMap<String, ArrayList<Event>> hashMapFromList
                     = new LinkedHashMap<String, ArrayList<Event>>();
-            //создаем буферный List в который будем записывать отсортированные Дела
-            ArrayList<Event> arrayListBuffer = new ArrayList<>();
-            /*метод сортировки пузырьком, неэффективно, но просто. Но перед ним важно чтобы уже
-            список был отсортирован, и Дела были в своей ествественной последовательности
+
+            /* Неэффективно, но просто. Но перед данным циклов важно чтобы
+            список был уже отсортирован, и Дела были в своей ествественной последовательности
              */
             for (int i = 0; i < bufferEvents.size(); i++) {
-                for (int j = 1; j < bufferEvents.size(); j++) {
-                    //Если текущий день равен прошлому, то
-                    if (bufferEvents.get(j).getDayofEvent().equals(bufferEvents.get(i).getDayofEvent())) {
-                        //добавляем его в список
-                        arrayListBuffer.add(bufferEvents.get(i));
-                        //обновляем HashMap с текущим днем(ключем) и делом (значением)
-                        hashMapFromList.put(bufferEvents.get(i).getDayofEvent(), arrayListBuffer);
-                    }else{
-                        //если не равен, значит это новый день и необходимо обновить список
-                        arrayListBuffer.clear();
-                        arrayListBuffer.add(bufferEvents.get(j));
-                        hashMapFromList.put(bufferEvents.get(j).getDayofEvent(), arrayListBuffer);
+                if (!hashMapFromList.containsKey(bufferEvents.get(i).getDayofEvent())) {
+                    //создаем буферный List в который будем записывать отсортированные Дела
+                    ArrayList<Event> arrayListBuffer = new ArrayList<>();
+                    arrayListBuffer.add(bufferEvents.get(i));
+                    //начинаем сравнивать с другими днями
+                    for (int j = 1; j < bufferEvents.size(); j++) {
+                        //если совпадает, то заносим в список
+                        if (bufferEvents.get(j).getDayofEvent().equals(bufferEvents.get(i).getDayofEvent())) {
+                            arrayListBuffer.add(bufferEvents.get(j));
+                        }
                     }
 
+                    //полученный список вставляем в хэшмап
+                    hashMapFromList.put(bufferEvents.get(i).getDayofEvent(), arrayListBuffer);
                 }
             }
             //Отдаем полученную HashMap
             return hashMapFromList;
-        }
+            }
         //но если список был пуст, то и отдавать нечего
         return null;
-    }
+        }
+
+
+
     /*Метод в котором сохраняем наш список дел в файл
     на всякий случай каждое исключание поместил в отдельный catch, возможно сделаю позде Toast с
     сообщениями
      */
-    public void saveToJson(Context context) {
+    public void saveToJson(Context context,EventManager data) {
 
         Gson gson = new Gson();
         //формируем наш список дел в JSON формат
@@ -132,7 +136,7 @@ public class JSONConverter {
             //вызываем метод для первичной инициализации ежедневника и берем дела из ТЗ
             firstInitEvents();
             //в поле data находятся дела из ТЗ, вызываем метод сохранения файла
-            saveToJson(context);
+            saveToJson(context,data);
             //вызываем заново загрузку
             load(context);
             //надо добавь всплывающее окно Тоаст с тем, что ещё не создано дел
@@ -156,7 +160,7 @@ public class JSONConverter {
         if (bufferString.equals("null")||bufferString.equals("")) {
             //если каким то образом в файле null или он просто пустой, то повторяем действия выше
             firstInitEvents();
-            saveToJson(context);
+            saveToJson(context,data);
             load(context);
             return;
         }

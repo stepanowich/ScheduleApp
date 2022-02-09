@@ -65,7 +65,7 @@ public class Event implements Parcelable {
     public Event(Integer id, String dateStart,String dateEnd, String name, String description) {
         this.id = id;
         this.dateStart = dateStart;
-        this.dateStart = dateEnd;
+        this.dateEnd = dateEnd;
         this.name = name;
         this.description = description;
     }
@@ -119,21 +119,21 @@ public class Event implements Parcelable {
     в качестве ключа в hashMap далее
      */
     public String getDayofEvent(){
-        Date date_start = new Date (new Timestamp(Long.parseLong(getDateStart())).getTime());
+        Date date_start = new Date (Long.parseLong(getDateStart())*1000);
         SimpleDateFormat dateForm = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            dateForm = new SimpleDateFormat("d/M/YYYY");
+            dateForm = new SimpleDateFormat("d/M/yyyy");
         }
         return dateForm.format(date_start);
     }
     /*Перевод из timestamp в в формат date
      */
     public Date getDateEvent(){
-        Date dateEvent = new Date (new Timestamp(Long.parseLong(getDateStart())).getTime());
+        Date dateEvent = new Date (Long.parseLong(getDateStart())*1000);
         return dateEvent;
     }
     public String getTimeStartOfEvent(){
-        Date date_start = new Date (new Timestamp(Long.parseLong(getDateStart())).getTime());
+        Date date_start = new Date (Long.parseLong(getDateStart())*1000);
         SimpleDateFormat dateForm = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             dateForm = new SimpleDateFormat("HH:mm");
@@ -141,7 +141,7 @@ public class Event implements Parcelable {
         return dateForm.format(date_start);
     }
     public String getTimeEndOfEvent(){
-        Date date_start = new Date (new Timestamp(Long.parseLong(getDateEnd())).getTime());
+        Date date_start = new Date (Long.parseLong(getDateEnd())*1000);
         SimpleDateFormat dateForm = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             dateForm = new SimpleDateFormat("HH:mm");

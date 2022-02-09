@@ -75,9 +75,14 @@ public class ActivityTwo extends AppCompatActivity {
                     public void onClick(View view) {
                         event = eventCreator(date);
                         Intent intent = new Intent();
-                        intent.putExtra("newEvent", event);
+                        intent.putExtra("newID", event.getId().toString());
+                        intent.putExtra("newStart", event.getDateStart());
+                        intent.putExtra("newEnd", event.getDateEnd());
+                        intent.putExtra("newName", event.getName());
+                        intent.putExtra("newDescr", event.getDescription());
                         setResult(78, intent);
                         ActivityTwo.super.onBackPressed();
+                        finish();
                     }
                 });
 
@@ -105,10 +110,10 @@ public class ActivityTwo extends AppCompatActivity {
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     private Event eventCreator(String date){
-        Event event = new Event(JSONConverter.getCurrentID(),
-                timestampStart(date,editableDateStartEnd.getText().toString()),
-                timestampEnd(date,editableDateStartEnd.getText().toString()),
-                TxEditName.getText().toString(),TxEditDescription.getText().toString());
+        Event event = new Event(JSONConverter.getCurrentID()+1,
+                ""+timestampStart(date,editableDateStartEnd.getText().toString()),
+                ""+timestampEnd(date,editableDateStartEnd.getText().toString()),
+                ""+TxEditName.getText().toString(),""+TxEditDescription.getText().toString());
         return event;
     }
 
@@ -117,10 +122,10 @@ public class ActivityTwo extends AppCompatActivity {
         String parsedTimeStart=time.substring(0,5);
             String timestampStart="";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            DateFormat formatter = new SimpleDateFormat("d/M/YYYY HH:mm");
+            DateFormat formatter = new SimpleDateFormat("d/M/yyyy HH:mm");
             try {
                 Date dateStart = formatter.parse(date+" "+parsedTimeStart);
-//                Timestamp timestamp = new Timestamp(dateStart.());
+//
                 long timestamp = dateStart.getTime()/1000;
                 timestampStart=timestamp+"";
 
@@ -135,10 +140,9 @@ public class ActivityTwo extends AppCompatActivity {
         String parsedTimeEnd=time.substring(6,11);
         String timestampEnd="";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            DateFormat formatter = new SimpleDateFormat("d/M/YYYY HH:mm");
+            DateFormat formatter = new SimpleDateFormat("d/M/yyyy HH:mm");
             try {
                 Date dateStart = formatter.parse(date+" "+parsedTimeEnd);
-//                Timestamp timestamp = new Timestamp(dateStart.getTime());
                 long timestamp = dateStart.getTime()/1000;
                 timestampEnd=timestamp+"";
 
