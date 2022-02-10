@@ -88,8 +88,7 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnLi
                 chosen_day = "" + mDatePicker.getDayOfMonth() + "/";
                 chosen_day += (mDatePicker.getMonth() + 1) + "/";
                 chosen_day += (mDatePicker.getYear());
-                Toast.makeText(getApplicationContext(),
-                        chosen_day, Toast.LENGTH_SHORT).show();
+
                 if (hashMap.containsKey(chosen_day) && !hashMap.isEmpty()) {
                     adapter.update(hashMap.get(chosen_day));
                 } else {
@@ -230,12 +229,11 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnLi
         EventManager eventsManagerToSafe = new EventManager();
         Object[] ar = hashMapBuffer.values().toArray();
         ArrayList<Event> eventsToSafeAfterDelete = new ArrayList<>();
-
         for (int i = 0; i < ar.length; i++) {
             eventsToSafeAfterDelete.addAll((ArrayList<Event>) ar[i]);
         }
-        Set<Event> eventSet = new HashSet<Event>(events);
-        eventsToSafeAfterDelete.clear();
+        Set<Event> eventSet = new HashSet<Event>(eventsToSafeAfterDelete);
+        eventsToSafeAfterDelete=new ArrayList<>();
         eventsToSafeAfterDelete.addAll(eventSet);
         eventsManagerToSafe.setEvent(eventsToSafeAfterDelete);
         jsonConverter.saveToJson(getApplicationContext(), eventsManagerToSafe);

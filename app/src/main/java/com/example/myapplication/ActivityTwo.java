@@ -91,21 +91,31 @@ public class ActivityTwo extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
-                Event event = new Event(JSONConverter.getCurrentID()+1,
-                        ""+timestampStart(date,editableDateStartEnd.getText().toString()),
-                        ""+timestampEnd(date,editableDateStartEnd.getText().toString()),
-                        ""+TxEditName.getText().toString(),""+TxEditDescription.getText().toString());
-                Intent intent = new Intent();
-                intent.putExtra("newID", event.getId().toString());
-                intent.putExtra("newStart", event.getDateStart());
-                intent.putExtra("newEnd", event.getDateEnd());
-                intent.putExtra("newName", event.getName());
-                intent.putExtra("newDescr", event.getDescription());
-                setResult(01, intent);
-                ActivityTwo.super.onBackPressed();
-                finish();
+                if (!editableDateStartEnd.getText().toString().equals("") && !
+                        TxEditDescription.getText().toString().equals("") &&
+                        !TxEditName.getText().toString().equals("")) {
+                    Toast.makeText(getApplicationContext(),
+                            "Создано новое дело!", Toast.LENGTH_SHORT).show();
+                    Event event = new Event(JSONConverter.getCurrentID() + 1,
+                            "" + timestampStart(date, editableDateStartEnd.getText().toString()),
+                            "" + timestampEnd(date, editableDateStartEnd.getText().toString()),
+                            "" + TxEditName.getText().toString(), "" + TxEditDescription.getText().toString());
+                    Intent intent = new Intent();
+                    intent.putExtra("newID", event.getId().toString());
+                    intent.putExtra("newStart", event.getDateStart());
+                    intent.putExtra("newEnd", event.getDateEnd());
+                    intent.putExtra("newName", event.getName());
+                    intent.putExtra("newDescr", event.getDescription());
+                    setResult(01, intent);
+                    ActivityTwo.super.onBackPressed();
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(),
+                            "Пожалуйста, опишите новое дело!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
 
     }
 
@@ -160,16 +170,30 @@ public class ActivityTwo extends AppCompatActivity {
                 @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onClick(View view) {
+                    if (!editableDateStartEnd.getText().toString().equals("") && !
+                            TxEditDescription.getText().toString().equals("") &&
+                            !TxEditName.getText().toString().equals("")) {
 
-                    Intent intent = new Intent();
-                    intent.putExtra("editedID", event.getId().toString());
-                    intent.putExtra("editedStart", timestampStart(event.getDayofEvent(),editableDateStartEnd.getText().toString()));
-                    intent.putExtra("editedEnd", timestampEnd(event.getDayofEvent(),editableDateStartEnd.getText().toString()));
-                    intent.putExtra("editedName", TxEditName.getText().toString());
-                    intent.putExtra("editedDescr", TxEditDescription.getText().toString());
-                    setResult(02, intent);
-                    ActivityTwo.super.onBackPressed();
-                    finish();
+                        Intent intent = new Intent();
+                        intent.putExtra("editedID", event.getId().toString());
+                        intent.putExtra("editedStart", timestampStart(event.getDayofEvent(), editableDateStartEnd.getText().toString()));
+                        intent.putExtra("editedEnd", timestampEnd(event.getDayofEvent(), editableDateStartEnd.getText().toString()));
+                        intent.putExtra("editedName", TxEditName.getText().toString());
+                        intent.putExtra("editedDescr", TxEditDescription.getText().toString());
+                        setResult(02, intent);
+                        ActivityTwo.super.onBackPressed();
+                        finish();
+                    }else if (!editableDateStartEnd.getText().toString().equals("")&&
+                    editableDateStartEnd.getText().toString().equals(event.getDateStart()+" "+event.getDateEnd())&&
+                            TxEditName.getText().toString().equals(event.getName())&&
+                            !TxEditDescription.getText().toString().equals("")&&
+                            TxEditDescription.getText().toString().equals(event.getDescription())&&
+                            !TxEditName.getText().toString().equals("")){
+                        ActivityTwo.super.onBackPressed();
+                    }else{
+                        Toast.makeText(getApplicationContext(),
+                                "Пожалуйста, опишите дело!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
