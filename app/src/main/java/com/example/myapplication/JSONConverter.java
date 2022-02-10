@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -139,7 +140,9 @@ public class JSONConverter {
             saveToJson(context,data);
             //вызываем заново загрузку
             load(context);
-            //надо добавь всплывающее окно Тоаст с тем, что ещё не создано дел
+
+            Toast.makeText(context,
+                    "Не создано ещё ниодного дела!", Toast.LENGTH_SHORT).show();
         }
         //открываем потом на чтение и оборачиваем его
         InputStreamReader isr = new InputStreamReader(fis);
@@ -157,11 +160,14 @@ public class JSONConverter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (bufferString.equals("null")||bufferString.equals("")) {
+        if (bufferString.equals("null")||bufferString.equals("")
+        ||bufferString.equals("{\"event\":[]}")) {
             //если каким то образом в файле null или он просто пустой, то повторяем действия выше
             firstInitEvents();
             saveToJson(context,data);
             load(context);
+            Toast.makeText(context,
+                    "К сожалению ваши дела были удалены ", Toast.LENGTH_SHORT).show();
             return;
         }
         //получаем из JSON с помощью GSON список дел
