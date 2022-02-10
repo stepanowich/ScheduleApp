@@ -16,9 +16,11 @@ import java.util.List;
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> implements Serializable {
 
     private List<Event> events;
+    private OnListListener mOnListListener;
 
-    EventAdapter(ArrayList<Event> businesses) {
+    EventAdapter(ArrayList<Event> businesses,OnListListener mOnListListener) {
         this.events = businesses;
+        this.mOnListListener =mOnListListener;
 
     }
 
@@ -33,7 +35,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         //создаём новый View элемент списка из полученного контекста и xml
         View view = inflater.inflate(layoutIdForListItem, parent, false);
         //обарачиваем в ранее созданый BusinessViewHolder
-        EventViewHolder viewHolder = new EventViewHolder(view);
+        EventViewHolder viewHolder = new EventViewHolder(view, mOnListListener);
 
         return viewHolder;
     }
@@ -54,20 +56,28 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     //Создаем вложенный класс(обёртка для элемента списка)
-    class EventViewHolder extends RecyclerView.ViewHolder {
+    class EventViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView elementIndex;
         TextView name;
+        OnListListener onListListener;
 
         //itemView это объект который соответствует элементу списка, который генерируется из
         //соответствуещего элемента xml файла
-        public EventViewHolder(View itemView) {
+        public EventViewHolder(View itemView, OnListListener onListListener) {
             super(itemView);
             //находим TextView и генерурем java object
             elementIndex = itemView.findViewById(R.id.element_index);
             name = itemView.findViewById(R.id.business_name);
-
+            this.onListListener=onListListener;
+            itemView.setOnClickListener(this);
         }
 
+
+
+        @Override
+        public void onClick(View v) {
+                onListListener.onListClick(getAdapterPosition());
+        }
     }
     //Метод обновления списка дел на экране
     @SuppressLint("NotifyDataSetChanged")
@@ -75,9 +85,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         if (updateEvents == null) {
             updateEvents = new ArrayList<Event>();
         } else {
-            events.clear();
+            events=new ArrayList<Event>();
         }
         events.addAll(updateEvents);
         notifyDataSetChanged();
+    }
+    public interface OnListListener{
+        void onListClick(int pos);
     }
 }

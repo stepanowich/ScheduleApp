@@ -75,7 +75,7 @@ public class JSONConverter {
                     //начинаем сравнивать с другими днями
                     for (int j = 1; j < bufferEvents.size(); j++) {
                         //если совпадает, то заносим в список
-                        if (bufferEvents.get(j).getDayofEvent().equals(bufferEvents.get(i).getDayofEvent())) {
+                        if (bufferEvents.get(j).getDayofEvent().equals(bufferEvents.get(i).getDayofEvent())&&!arrayListBuffer.contains(bufferEvents.get(j))) {
                             arrayListBuffer.add(bufferEvents.get(j));
                         }
                     }

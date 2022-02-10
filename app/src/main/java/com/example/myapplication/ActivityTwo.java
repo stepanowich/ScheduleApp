@@ -49,44 +49,19 @@ public class ActivityTwo extends AppCompatActivity {
         и начинаем работать со списком из основной активности
          */
 
-        if(getIntent().getParcelableExtra("event")!=null) {
-            event = getIntent().getParcelableExtra("event");
-            Event eventOut = eventModerator(event);
-            saveButton.setOnClickListener(new View.OnClickListener() {
+        if(getIntent().getStringExtra("eventID")!=null) {
+            Intent intent = getIntent();
+            int eventID = Integer.parseInt(intent.getStringExtra("eventID"));
+            String dateStart = intent.getStringExtra("eventStart");
+            String dateEnd = intent.getStringExtra("eventEnd");
+            String name = intent.getStringExtra("eventName");
+            String discription = intent.getStringExtra("eventDescr");
+            event=new Event(eventID,dateStart,dateEnd,name,discription);
+            eventModerator(event);
 
-                @SuppressLint("NotifyDataSetChanged")
-                @RequiresApi(api = Build.VERSION_CODES.N)
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.putExtra("newEvent", (Parcelable) eventOut);
-                }
-            });
         }else if(getIntent().getStringExtra("dateOfEvent")!=null){
             date = getIntent().getStringExtra("dateOfEvent");
-
-
-                //обновить кнопку сохранить и чтобы он закрывал активити и возвращался
-                saveButton.setOnClickListener(new View.OnClickListener() {
-
-                    @SuppressLint("NotifyDataSetChanged")
-                    @RequiresApi(api = Build.VERSION_CODES.N)
-                    @Override
-                    public void onClick(View view) {
-                        event = eventCreator(date);
-                        Intent intent = new Intent();
-                        intent.putExtra("newID", event.getId().toString());
-                        intent.putExtra("newStart", event.getDateStart());
-                        intent.putExtra("newEnd", event.getDateEnd());
-                        intent.putExtra("newName", event.getName());
-                        intent.putExtra("newDescr", event.getDescription());
-                        setResult(78, intent);
-                        ActivityTwo.super.onBackPressed();
-                        finish();
-                    }
-                });
-
-
+            eventCreator(date);
 
         }
 
@@ -109,12 +84,29 @@ public class ActivityTwo extends AppCompatActivity {
 
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private Event eventCreator(String date){
-        Event event = new Event(JSONConverter.getCurrentID()+1,
-                ""+timestampStart(date,editableDateStartEnd.getText().toString()),
-                ""+timestampEnd(date,editableDateStartEnd.getText().toString()),
-                ""+TxEditName.getText().toString(),""+TxEditDescription.getText().toString());
-        return event;
+    private void eventCreator(String date){
+        saveButton.setOnClickListener(new View.OnClickListener() {
+
+            @SuppressLint("NotifyDataSetChanged")
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View view) {
+                Event event = new Event(JSONConverter.getCurrentID()+1,
+                        ""+timestampStart(date,editableDateStartEnd.getText().toString()),
+                        ""+timestampEnd(date,editableDateStartEnd.getText().toString()),
+                        ""+TxEditName.getText().toString(),""+TxEditDescription.getText().toString());
+                Intent intent = new Intent();
+                intent.putExtra("newID", event.getId().toString());
+                intent.putExtra("newStart", event.getDateStart());
+                intent.putExtra("newEnd", event.getDateEnd());
+                intent.putExtra("newName", event.getName());
+                intent.putExtra("newDescr", event.getDescription());
+                setResult(01, intent);
+                ActivityTwo.super.onBackPressed();
+                finish();
+            }
+        });
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -155,19 +147,34 @@ public class ActivityTwo extends AppCompatActivity {
         return  timestampEnd;
     }
 
-    private Event eventModerator(Event event){
-        if(event!=null){
+    private void eventModerator(Event event){
+
             TxEditName.setText(event.getName());
             TxEditDescription.setText(event.getDescription());
             editableDateStartEnd.setText(event.getTimeStartOfEvent()+"-"+event.getTimeEndOfEvent());
-        }else if(TxEditName.getText().toString()!=event.getName()&&TxEditName.getText().toString()!=""||
-                TxEditDescription.getText().toString()!=event.getDescription()&&TxEditDescription.getText().toString()!=""||
-                editableDateStartEnd.getText().toString()!=event.getTimeStartOfEvent()+"-"+event.getTimeEndOfEvent()){
-            //Высветить кнопку Save
-            //Листенер и в нем уже
-//            event = new Event()
-        }
-        return event;
+            initAdapterDropItem();
+
+            saveButton.setOnClickListener(new View.OnClickListener() {
+
+                @SuppressLint("NotifyDataSetChanged")
+                @RequiresApi(api = Build.VERSION_CODES.N)
+                @Override
+                public void onClick(View view) {
+
+                    Intent intent = new Intent();
+                    intent.putExtra("editedID", event.getId().toString());
+                    intent.putExtra("editedStart", timestampStart(event.getDayofEvent(),editableDateStartEnd.getText().toString()));
+                    intent.putExtra("editedEnd", timestampEnd(event.getDayofEvent(),editableDateStartEnd.getText().toString()));
+                    intent.putExtra("editedName", TxEditName.getText().toString());
+                    intent.putExtra("editedDescr", TxEditDescription.getText().toString());
+                    setResult(02, intent);
+                    ActivityTwo.super.onBackPressed();
+                    finish();
+                }
+            });
+
+
+
     }
     private void initAdapterDropItem(){
 
@@ -202,6 +209,7 @@ public class ActivityTwo extends AppCompatActivity {
                 R.layout.dropdown_item, items);
         editableDateStartEnd.setAdapter(arrayAdapter);
     }
+
 
 
 }
