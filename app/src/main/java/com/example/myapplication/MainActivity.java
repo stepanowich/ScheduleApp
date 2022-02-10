@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnLi
                             events = Event.getSortedList(events);
                             hashMapBuffer.put(chosen_day, events);
                             adapter.update(hashMapBuffer.get(chosen_day));
-                            EventManager eventsToSafe = new EventManager();
+                            EventManager eventsManagerToSafe = new EventManager();
                             ArrayList<Event> events = new ArrayList<>();
                             Object[] ar = hashMapBuffer.values().toArray();
                             for (int i = 0; i < ar.length; i++) {
@@ -148,8 +148,8 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnLi
                             Set<Event> eventSet = new HashSet<Event>(events);
                             events.clear();
                             events.addAll(eventSet);
-                            eventsToSafe.setEvent(events);
-                            jsonConverter.saveToJson(getApplicationContext(), eventsToSafe);
+                            eventsManagerToSafe.setEvent(events);
+                            jsonConverter.saveToJson(getApplicationContext(), eventsManagerToSafe);
                         }
 
                     }
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnLi
                             events = Event.getSortedList(events);
                             hashMapBuffer.put(chosen_day, events);
                             adapter.update(hashMapBuffer.get(chosen_day));
-                            EventManager eventsToSafe = new EventManager();
+                            EventManager eventsManagerToSafe = new EventManager();
                             ArrayList<Event> events = new ArrayList<>();
                             Object[] ar = hashMapBuffer.values().toArray();
                             for (int i = 0; i < ar.length; i++) {
@@ -176,8 +176,8 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnLi
                             Set<Event> eventSet = new HashSet<Event>(events);
                             events.clear();
                             events.addAll(eventSet);
-                            eventsToSafe.setEvent(events);
-                            jsonConverter.saveToJson(getApplicationContext(), eventsToSafe);
+                            eventsManagerToSafe.setEvent(events);
+                            jsonConverter.saveToJson(getApplicationContext(), eventsManagerToSafe);
                         }
 
                     }
@@ -206,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnLi
 
     @Override
     public void onListClick(int pos) {
+
         events = hashMap.get(chosen_day);
         hashMapBuffer = hashMap;
         eventToEdit = hashMap.get(chosen_day).get(pos);
@@ -216,6 +217,29 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnLi
         intent.putExtra("eventName", eventToEdit.getName());
         intent.putExtra("eventDescr", eventToEdit.getDescription());
         activityResultLauncher.launch(intent);
+
+    }
+    @Override
+    public void onDeleteClick(int pos) {
+        hashMapBuffer = hashMap;
+        events = hashMap.get(chosen_day);
+        Event eventToDelete = hashMap.get(chosen_day).get(pos);
+        events.remove(eventToDelete);
+        hashMapBuffer.put(chosen_day, events);
+        adapter.update(hashMapBuffer.get(chosen_day));
+        EventManager eventsManagerToSafe = new EventManager();
+        Object[] ar = hashMapBuffer.values().toArray();
+        ArrayList<Event> eventsToSafeAfterDelete = new ArrayList<>();
+
+        for (int i = 0; i < ar.length; i++) {
+            eventsToSafeAfterDelete.addAll((ArrayList<Event>) ar[i]);
+        }
+        Set<Event> eventSet = new HashSet<Event>(events);
+        eventsToSafeAfterDelete.clear();
+        eventsToSafeAfterDelete.addAll(eventSet);
+        eventsManagerToSafe.setEvent(eventsToSafeAfterDelete);
+        jsonConverter.saveToJson(getApplicationContext(), eventsManagerToSafe);
+
 
     }
 }

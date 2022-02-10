@@ -3,16 +3,21 @@
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackgroundBorderless"
     android:padding ="10sp">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
         android:id="@+id/business_name"
         android:layout_gravity="center_vertical|end"
+        android:layout_marginEnd="50sp"
         android:fontFamily="monospace"
         android:textSize="12sp"
         style="@style/TextAppearance.AppCompat.Title"
+        android:padding="5sp"
+
         />
     <TextView
         android:layout_width="wrap_content"
@@ -24,6 +29,19 @@
         android:textSize="12sp"
         android:textColor="#000"
         style="@style/TextAppearance.AppCompat.Title"
+        android:padding="5sp"
+
+
+        />
+    <ImageView
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:id="@+id/delete_button"
+        android:src="@drawable/ic_baseline_delete_forever_24"
+        android:layout_gravity="center_vertical|end"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:padding="5sp"
+
         />
 
 </FrameLayout>

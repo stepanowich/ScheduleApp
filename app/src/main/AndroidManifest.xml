@@ -11,9 +11,11 @@
         android:theme="@style/Theme.MyApplication">
         <activity
             android:name=".ActivityTwo"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -43,7 +43,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/TxInLaName"
-        android:layout_width="330sp"
+        android:layout_width="310sp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16sp"
         android:layout_gravity="top|right"
@@ -62,7 +62,7 @@
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputDateStartEnd"
-        android:layout_width="320sp"
+        android:layout_width="310sp"
         android:layout_marginTop="100sp"
         android:hint="Выберите время"
         app:endIconMode="dropdown_menu"
