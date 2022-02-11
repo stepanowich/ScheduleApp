@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Дело:"
+        android:text="@string/name_event"
         android:id="@+id/name"
         android:layout_marginTop="30sp"
         android:layout_gravity="top|left"
@@ -20,7 +20,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="С-До:"
+        android:text="@string/time_event"
         android:id="@+id/dateStart"
         android:layout_marginTop="120sp"
         android:layout_gravity="top|left"
@@ -32,7 +32,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Описание"
+        android:text="@string/description_event"
         android:id="@+id/description"
         android:layout_marginTop="300sp"
         android:layout_gravity="top|center"
@@ -57,14 +57,14 @@
             android:layout_height="wrap_content"
             android:inputType="textCapWords"
             android:id="@+id/TxEditName"
-            android:hint="Напишите название дела"
+            android:hint="@string/hint_name"
              />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputDateStartEnd"
         android:layout_width="310sp"
         android:layout_marginTop="100sp"
-        android:hint="Выберите время"
+        android:hint="@string/hint_time"
         app:endIconMode="dropdown_menu"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
             android:id="@+id/TxEditDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Напишите описание дела"
+            android:hint="@string/hint_description"
             android:inputType="textMultiLine"
 
             />
@@ -106,7 +106,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|center"
         android:layout_marginTop="600sp"
-        android:text="Save"
+        android:text="@string/save_button"
         android:textColor="@color/black"
         style="@style/Widget.AppCompat.Button.Borderless"/>
 
